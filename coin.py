@@ -55,6 +55,7 @@ def predict_price(ticker):
     closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
     if len(closeDf) == 0:
         closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=9)]
+    closeDf = closeDf.fillna(0)
     closeValue = closeDf['yhat'].values[0]
     predicted_close_price = closeValue
 predict_price("KRW-BTC")
