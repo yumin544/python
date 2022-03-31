@@ -43,7 +43,7 @@ def get_current_price(ticker):
 predicted_close_price = 0
 def predict_price(ticker):
     global predicted_close_price
-    df = pyupbit.get_ohlcv(ticker, interval="minute1")
+    df = pyupbit.get_ohlcv(ticker, interval="minute10")
     df = df.reset_index()
     df['ds'] = df['index']
     df['y'] = df['close']
@@ -70,7 +70,7 @@ while True:
         end_time = start_time + datetime.timedelta(minutes=10)
         schedule.run_pending()
 
-        if start_time < now < end_time - datetime.timedelta(seconds=10):
+        if start_time < now < end_time - datetime.timedelta(minutes=10):
             target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
             if target_price < current_price and current_price < predicted_close_price:
