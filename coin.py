@@ -50,7 +50,7 @@ def predict_price(ticker):
     data = df[['ds','y']]
     model = Prophet()
     model.fit(data)
-    future = model.make_future_dataframe(periods=1, freq='H')
+    future = model.make_future_dataframe(periods=4, freq='H')
     forecast = model.predict(future)
     closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
     if len(closeDf) == 0:
