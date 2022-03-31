@@ -9,7 +9,6 @@ from fbprophet import Prophet
 myToken = "xoxb-3209322726289-3220474532928-A8JSmwJDqcBA2GWas7c0cJzH"
 access = "vvxx0PxmxkOqmSG9Wf7rBbmu63PfA9rmyGOTWGh9"
 secret = "7IEKwV6CN6PsN6ERwiJPxhR1gBZMP1jcxieYrwgY"
-k = 0.1
 
 def post_message(token, channel, text):
     response = requests.post("https://slack.com/api/chat.postMessage",
@@ -19,19 +18,16 @@ def post_message(token, channel, text):
     print(response)
 
 def get_target_price(ticker, k):
-    """변동성 돌파 전략으로 매수 목표가 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="minute", count=2)
     target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
     return target_price
 
 def get_start_time(ticker):
-    """시작 시간 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
     start_time = df.index[0]
     return start_time
 
 def get_balance(ticker):
-    """잔고 조회"""
     balances = upbit.get_balances()
     for b in balances:
         if b['currency'] == ticker:
@@ -42,12 +38,10 @@ def get_balance(ticker):
     return 0
 
 def get_current_price(ticker):
-    """현재가 조회"""
     return pyupbit.get_orderbook(ticker=ticker)["orderbook_units"][0]["ask_price"]
 
 predicted_close_price = 0
 def predict_price(ticker):
-    """Prophet으로 당일 종가 가격 예측"""
     global predicted_close_price
     df = pyupbit.get_ohlcv(ticker, interval="minute1")
     df = df.reset_index()
@@ -66,11 +60,9 @@ def predict_price(ticker):
 predict_price("KRW-BTC")
 schedule.every().hour.do(lambda: predict_price("KRW-BTC"))
 
-# 로그인
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 
-# 자동매매 시작
 while True:
     try:
         now = datetime.datetime.now()
@@ -79,7 +71,7 @@ while True:
         schedule.run_pending()
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            target_price = get_target_price("KRW-BTC", 0.5)
+            target_price = get_target_price("KRW-BTC", 0.1)
             current_price = get_current_price("KRW-BTC")
             if target_price < current_price and current_price < predicted_close_price:
                 krw = get_balance("KRW")
