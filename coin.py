@@ -6,9 +6,9 @@ import schedule
 from fbprophet import Prophet
 
 
-myToken = "xoxb-3209322726289-3220474532928-A8JSmwJDqcBA2GWas7c0cJzH"
-access = "vvxx0PxmxkOqmSG9Wf7rBbmu63PfA9rmyGOTWGh9"
-secret = "7IEKwV6CN6PsN6ERwiJPxhR1gBZMP1jcxieYrwgY"
+myToken = "token"
+access = "access code"
+secret = "secret code"
 
 def post_message(token, channel, text):
     response = requests.post("https://slack.com/api/chat.postMessage",
